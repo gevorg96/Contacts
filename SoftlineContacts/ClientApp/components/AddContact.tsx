@@ -52,31 +52,28 @@ export class AddContact extends React.Component<RouteComponentProps<{}>, IAddCon
             fetch('api/contacts', {
                 method: 'PUT',
                 body: data,
-            }).then((response) => response.json())
-                .then((body) => {
-                    if (body == "Ok") {
-                        this.props.history.push("/");
-                    }
-                    else {
-                        confirm(body.toString());
-                    }
-                });     
+            }).then((response) => {
+                if (response.status == 400) {
+                    confirm('Invalid Contact key')
+                }
+                else if (response.status == 200) {
+                    this.props.history.push("/");
+                }
+            })
         }
 
         else {
             fetch('api/contacts', {
                 method: 'POST',
                 body: data,
-            }).then((response) => response.json()
-                )
-                .then((body) => {
-                    if (body == "Ok") {
-                        this.props.history.push("/");
-                    }
-                    else {
-                        confirm(body.toString());
-                    }
-                });                
+            }).then((response) => {
+                if (response.status == 400) {
+                    confirm('Invalid Contact key')
+                }
+                else if (response.status == 200) {
+                    this.props.history.push("/");
+                }
+            });     
         }
     }
 

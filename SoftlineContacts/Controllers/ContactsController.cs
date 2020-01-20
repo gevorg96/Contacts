@@ -39,13 +39,13 @@ namespace SoftlineContacts.Controllers
                     var cont = await _db.Contacts.FirstOrDefaultAsync(p => p.Key == contact.Key);
                     if (cont != null)
                     {
-                        return new JsonResult("There is the contact with the same key.");
+                        return BadRequest();
                     }
                 }
 
                 await _db.Contacts.AddAsync(contact);
                 await _db.SaveChangesAsync();
-                return new JsonResult("Ok");
+                return Ok();
             }
             catch
             {
@@ -59,13 +59,13 @@ namespace SoftlineContacts.Controllers
             try
             {
                 var cont = _db.Contacts.Where(p => p.Key == contact.Key).ToList();
-                if (cont != null && cont.Count > 1)
+                if (cont != null && cont.Count > 0 && cont.Any(p => p.Id != contact.Id))
                 {
-                    return new JsonResult("There is the contact with the same key.");
+                    return BadRequest();
                 }
                 _db.Contacts.Update(contact);
                 await _db.SaveChangesAsync();
-                return new JsonResult("Ok");
+                return Ok();
             }
             catch  
             {
@@ -82,7 +82,7 @@ namespace SoftlineContacts.Controllers
                 var contact = await _db.Contacts.FirstOrDefaultAsync(p => p.Id == id);
                 _db.Contacts.Remove(contact);
                 await _db.SaveChangesAsync();
-                return new JsonResult("Ok");
+                return Ok();
             }
             catch
             {
